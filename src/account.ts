@@ -2,15 +2,15 @@ import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { SigningStargateClient } from "@cosmjs/stargate";
 import { RPC_ENDPOINT } from "./config";
 
-export async function createAccount(prefix = "sei") {
+export async function createWallet(prefix = "sei") {
     const wallet = await DirectSecp256k1HdWallet.generate(12, {
         prefix: prefix,
     });
     return wallet;
 }
 
-export async function importAccount(mnemonic: string) {
-    const wallet = await DirectSecp256k1HdWallet.fromMnemonic(mnemonic);
+export async function importWallet(mnemonic: string) {
+    const wallet = await DirectSecp256k1HdWallet.fromMnemonic(mnemonic, { prefix: 'sei' });
     return wallet
 }
 
