@@ -1,4 +1,6 @@
 import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
+import { SigningStargateClient } from "@cosmjs/stargate";
+import { RPC_ENDPOINT } from "./config";
 
 export async function createAccount(prefix = "sei") {
     const wallet = await DirectSecp256k1HdWallet.generate(12, {
@@ -7,7 +9,21 @@ export async function createAccount(prefix = "sei") {
     return wallet;
 }
 
+export async function importAccount(mnemonic: string) {
+    const wallet = await DirectSecp256k1HdWallet.fromMnemonic(mnemonic);
+    return wallet
+}
+
 export async function getAddress(wallet: DirectSecp256k1HdWallet) {
     const [account] = await wallet.getAccounts();
-    return account;
+    return account.address;
+}
+
+export async function getBalance(wallet: DirectSecp256k1HdWallet) {
+    const client = await SigningStargateClient.connectWithSigner(RPC_ENDPOINT, wallet);
+    const address = await getAddress(wallet);
+
+    // Getting all balances for this account 
+    const balances = client.getAllBalances(address);
+    return balances
 }

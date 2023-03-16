@@ -1,10 +1,10 @@
 import { Coin, OfflineSigner } from "@cosmjs/proto-signing";
 import { assertIsDeliverTxSuccess, SigningStargateClient } from "@cosmjs/stargate";
-import { rpcEndpoint, sendFee } from "./config";
+import { RPC_ENDPOINT, SEED_FEE } from "./config";
 
 async function sendTx(wallet: OfflineSigner, recipient: string, amount: Coin[]) {
     const client = await SigningStargateClient.connectWithSigner(
-        rpcEndpoint,
+        RPC_ENDPOINT,
         wallet,
     );
     const [myAccount] = await wallet.getAccounts()
@@ -13,10 +13,10 @@ async function sendTx(wallet: OfflineSigner, recipient: string, amount: Coin[]) 
         myAccount.address,
         recipient,
         amount,
-        sendFee,
+        SEED_FEE,
         'Transaction',
     );
-    
+
     assertIsDeliverTxSuccess(transaction);
     console.log('Successfully broadcasted:', transaction)
 }
